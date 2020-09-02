@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  ExchangeMe
+
+  Created by 张桀硕 on 2020/9/2.
+  Copyright © 2020年 jieshuo.zhang. All rights reserved.
+*/
+
+Too_Long = "10桁を超えないように、入力してください。";
+Try_Again = "ネットワークの通信が失敗しました。もう一度お試してください。";
+Title = "が表示されでいる";
+Button_Title = "リアルタイムレート";
+Infor_Title = "About";
+Informations = "1.Your input cannot exceed 10 digits.\n2.Click the bottom button to update the exchange rate in time.\n3.When you change the currency, the currency on the screen will be converted into the new currency according to the exchange rate.\n4.This version contains exchange rates for all currencies, which is a bit redundant\n5.Next version you can choose the exchange rate you want only fews :)";

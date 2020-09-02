@@ -32,7 +32,7 @@ class ExchangeRateViewController: UIViewController {
     @IBOutlet weak var rateButton: UIButton!
 
     // 输入最大长度
-    let maxLen = 20 // 超过画面会崩
+    let maxLen = 10 // 超过画面会崩
     // 固定零值时的显示
     let zeroString: String = "0"
     // 价格字符，用于被改变和操作
@@ -58,8 +58,8 @@ class ExchangeRateViewController: UIViewController {
     // 下拉菜单内容
     private var items: [String] = []
 
-    // 当前货币
-    private var currency: String = "USDUSD"
+    // 当前货币 (默认)
+    private var currency: String = "USD"
 }
 
 // MARK:- 生命周期
@@ -79,12 +79,12 @@ extension ExchangeRateViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
         resetUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        refreshViews()
     }
     
     override func didReceiveMemoryWarning() {
@@ -94,6 +94,20 @@ extension ExchangeRateViewController {
 
 // MARK:- 内部方法
 extension ExchangeRateViewController {
+    
+    // 刷新视图
+    func refreshViews() {
+        // 设置标题栏
+        self.title = currency + NSLocalizedString("Title", comment: "")
+        self.navigationController?.navigationBar.barTintColor = UIColor.colorWith(hexString: "#415C72")
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+            NSAttributedString.Key.font: UIFont.init(name: "PingFangSC-Regular", size: 23) as Any,
+        ]
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.menuButton.tintColor = UIColor.white
+    }
     
     // 加载初始界面
     func setupViews() {
@@ -150,12 +164,17 @@ extension ExchangeRateViewController {
         // ふ汇率按钮
         rateButton.backgroundColor = UIColor.colorWith(hexString: "#FFC24D")
         rateButton.isEnabled = true
+        rateButton.titleLabel?.text = NSLocalizedString("Button_Title", comment: "")
         
         // 显示器背景
         backView.backgroundColor = UIColor.colorWith(hexString: "#6A8AA3")
         // 显示器数字
         textField.backgroundColor = UIColor.clear
         setTextFieldAttributedText(text: priceString)
+        
+        // 菜单按钮
+        menuButton.title = ""
+        menuButton.tintColor = UIColor.white
         
         // 设置按钮
         setting(button: buttonAC, title: "AC")
@@ -273,7 +292,7 @@ extension ExchangeRateViewController {
             // 限制长度
             if priceString.count == trueMax {
                 Utils().okButtonAlertView(
-                    title: "you can't over 20 world.",
+                    title: NSLocalizedString("Too_Long", comment: ""),
                     controller: self,
                     block: nil)
                 return
@@ -317,7 +336,8 @@ extension ExchangeRateViewController {
                 
                 var list: [SwiftyMenuDisplayable] = []
                 for (key, _) in self!.rateDic {
-                    list.append(key)
+                    let shortKey = Utils().cutStringStart(key, lenth: 3)
+                    list.append(shortKey)
                 }
                 self!.items = list as! [String]
                 
@@ -387,6 +407,15 @@ extension ExchangeRateViewController {
     @IBAction func tapGetRateButton(_ sender: UIButton) {
         getAllRate()
     }
+    
+    // Menu按键
+    @IBAction func tapSideMenuButton(_ sender: UIBarButtonItem) {
+        Utils().okButtonAlertView(
+            title: NSLocalizedString("Infor_Title", comment: ""),
+            message: NSLocalizedString("Informations", comment: ""),
+            controller: self,
+            block: nil)
+    }
 }
 
 // MARK:- 下拉代理
@@ -395,14 +424,15 @@ extension ExchangeRateViewController: SwiftyMenuDelegate {
     func swiftyMenu(_ swiftyMenu: SwiftyMenu, didSelectItem item: SwiftyMenuDisplayable, atIndex index: Int) {
         print("Selected item: \(item), at index: \(index)")
         
-        let oldRate = rateDic[currency]!
+        let oldRate = rateDic["USD" + currency]!
         let oldPrice = Double(priceString)!
-        let newRate = rateDic[item as! String]!
+        let newRate = rateDic["USD" + (item as! String)]!
         var newPrice = Utils().getNewPrice(oldPrice: oldPrice, oldRate: oldRate, newRate: newRate)
         newPrice = Utils().getDouble(newPrice, offset: 2)
         
         priceString = String(newPrice)
         currency = item as! String
+        self.title = currency + NSLocalizedString("Title", comment: "")
     }
     
     // 下拉菜单将要展开

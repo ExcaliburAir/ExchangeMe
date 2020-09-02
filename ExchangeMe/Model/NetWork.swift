@@ -59,17 +59,19 @@ extension Network {
                         }
                     }
                     else {
-                        Utils().okButtonAlertView(title: "Please Try Again!",
-                                                  controller: controller,
-                                                  block: nil)
+                        Utils().okButtonAlertView(
+                            title: NSLocalizedString("Try_Again", comment: ""),
+                            controller: controller,
+                            block: nil)
                     }
                     break
                 case .failure(_):
                     print(response.result.error ?? (Any).self)
-                    Utils().okButtonAlertView(title: "Please Try Again!",
-                                              controller: controller,
-                                              block: nil)
-                    
+                    Utils().okButtonAlertView(
+                        title: NSLocalizedString("Try_Again", comment: ""),
+                        controller: controller,
+                        block: nil)
+
                     break
                 }
         }//

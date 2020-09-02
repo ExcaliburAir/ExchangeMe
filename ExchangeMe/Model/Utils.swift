@@ -250,21 +250,6 @@ extension Utils {
         return appDelegate
     }
     
-    // 字符串转成双精度
-    func getDoubleFromString(_ string: String) -> Double {
-        if Double(string) != nil {
-            return Double(string)!
-        }
-        else {
-            return 0.0
-        }
-    }
-    
-    // 双精度转成字符串
-    func getStringFromDouble(_ double: Double) -> String {
-        return String(double)
-    }
-    
     // 用颜色生成图片
     func getImageWithColor(color: UIColor, width: CGFloat, height: CGFloat) -> UIImage?
     {
